@@ -10,3 +10,5 @@ dist
 .dist
 .serverless
 .webpack
+environments/.env.local
+environments/.env.prod
