@@ -1,0 +1,38 @@
+org: 12ccs
+app: test-nest
+service: test-nest
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-offline
+  - serverless-webpack
+  - serverless-dotenv-plugin
+
+useDotenv: true
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+
+package:
+  individually: true
+
+functions:
+  main:
+    handler: src/entrypoints/api-entrypoint.handler
+    events:
+      - http:
+          method: any
+          path: /{proxy+}
+          cors: true
+
+custom:
+  stage: ${opt:stage, "prod"}
+  webpack:
+    webpackConfig: 'webpack.config.js'
+    packager: 'yarn'
+    includeModules: false
+  dotenv:
+    path: environments/.env.${self:custom.stage}
+    logging: false

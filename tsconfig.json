@@ -1,0 +1,65 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./.dist",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "target": "ES2021",
+    "declaration": false,
+    "paths": {
+      "*": [
+        "./src/*"
+      ]
+    },
+    "lib": [
+      "ES2021"
+    ],
+    "typeRoots": [
+      "./node_modules/@types",
+      "../node_modules/@types",
+      "./src/types/"
+    ],
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitUseStrict": false,
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "traceResolution": false,
+    "listFiles": false,
+    "stripInternal": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "pretty": true,
+    "noEmitOnError": true,
+    "preserveConstEnums": true,
+    "incremental": true
+  },
+  "include": [
+    "src/**/*",
+    "migrations/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    ".dist/**/*",
+  ],
+  "ts-node": {
+    "transpileOnly": true,
+    "experiments": {
+      "topLevelAwait": true,
+    },
+    "compilerOptions": {
+      "module": "ESNext"
+    }
+  },
+}
