@@ -1,0 +1,12 @@
+.ts-out
+.cache-loader
+.webpack
+.serverless
+node_modules
+secrets.yml
+yarn-error.log
+build
+dist
+.dist
+.serverless
+.webpack
