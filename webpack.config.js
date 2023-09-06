@@ -128,6 +128,7 @@ module.exports = {
     modules: true,
     errors: true,
     warnings: true,
+    
     // our additional options
     moduleTrace: true,
     errorDetails: true,

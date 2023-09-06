@@ -5,6 +5,7 @@ service: test-nest
 frameworkVersion: '3'
 
 plugins:
+  - serverless-plugin-warmup
   - serverless-offline
   - serverless-webpack
   - serverless-dotenv-plugin
@@ -21,6 +22,7 @@ package:
 functions:
   main:
     handler: src/entrypoints/api-entrypoint.handler
+    timeout: 300
     events:
       - http:
           method: any
@@ -36,3 +38,21 @@ custom:
   dotenv:
     path: environments/.env.${self:custom.stage}
     logging: false
+  warmup:
+    officeHoursWarmer:
+      enabled: false
+      events:
+        - schedule: cron(0/5 8-17 ? * MON-FRI *)
+      concurrency: 10
+      verbose: true
+      logRetentionInDays: 7
+    outOfOfficeHoursWarmer:
+      enabled: false
+      events:
+        - schedule: cron(0/5 0-7 ? * MON-FRI *)
+        - schedule: cron(0/5 18-23 ? * MON-FRI *)
+        - schedule: cron(0/5 * ? * SAT-SUN *)
+      concurrency: 1
+      verbose: false
+    testWarmer:
+      enabled: false

@@ -1,8 +1,7 @@
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ApiModule } from 'api/api.module';
 import { Context, Handler } from 'aws-lambda';
 import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
@@ -10,7 +9,8 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
 import { Server } from 'http';
-import { TransformInterceptor } from 'middleware/interceptors/transform.interceptor';
+import { TransformInterceptor } from 'infrastructure/middleware/interceptors/transform.interceptor';
+import { ApiModule } from 'infrastructure/modules/api.module';
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely
 // due to a compressed response (e.g. gzip) which has not been handled correctly
@@ -36,21 +36,25 @@ async function bootstrapServer(): Promise<Server> {
 
       const app = await NestFactory.create(ApiModule, adapter);
 
-      // App level middleware
+      // NOTE: Middleware
       app.use(eventContext());
       app.useGlobalPipes(new ValidationPipe());
       app.useGlobalInterceptors(new TransformInterceptor());
       app.use(cookieParser());
       app.use(helmet());
 
-      // Swagger API documentation
+      // NOTE: Versioning
+      app.enableVersioning({
+        type: VersioningType.URI,
+      });
+
+      // NOTE: Swagger API documentation
       const config = new DocumentBuilder().build();
       const document = SwaggerModule.createDocument(app, config);
       SwaggerModule.setup('docs', app, document);
 
-      await app.init();
-
       cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
+      await app.init();
     } catch (error) {
       return Promise.reject(error);
     }
