@@ -2,7 +2,7 @@ import { ConflictException, Injectable } from '@nestjs/common';
 
 import { CreateUserInput } from './input/create-user.input';
 import { UserOutput } from './output/user.output';
-import { UserRequestContext } from 'core/auth/interfaces/user-request-context';
+import { UserContext } from 'core/auth/context/user.context';
 import { UnitOfWorkService } from 'core/data-access/unit-of-work.service';
 import { IUserProvider } from 'core/user/user.provider.abs';
 import { IUserWriter } from 'core/user/user.writer.abs';
@@ -15,10 +15,11 @@ export class UserService {
     private readonly unitOfWork: UnitOfWorkService,
   ) {}
 
-  async getUserContext({ id }: UserRequestContext): Promise<UserOutput> {
-    const user = await this.userProvider.getUser({ id }, 'id', 'name', 'email');
+  async getUserContext(): Promise<UserOutput> {
+    const userId = UserContext.getUserId();
+    const user = await this.userProvider.getUser({ id: userId }, 'id', 'name', 'email');
 
-    const test = await this.userProvider.getUser({ id });
+    const test = await this.userProvider.getUser({ id: userId });
     this.userWriter.updateUser({
       ...test!,
       name: 'Updated name',

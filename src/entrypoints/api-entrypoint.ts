@@ -14,6 +14,7 @@ import { Server } from 'http';
 import { clsMiddleware } from '../infrastructure/middleware/cls/correlationIdBinder';
 import { SessionNamespace } from 'core/auth/context/namespaces';
 import { TransformInterceptor } from 'infrastructure/middleware/interceptors/transform.interceptor';
+import { UserContextInterceptor } from 'infrastructure/middleware/interceptors/user.interceptor';
 import { ApiModule } from 'infrastructure/modules/api.module';
 
 // NOTE: If you get ERR_CONTENT_DECODING_FAILED in your browser, this is likely
@@ -47,6 +48,7 @@ async function bootstrapServer(): Promise<Server> {
       app.use(eventContext());
       app.useGlobalPipes(new ValidationPipe());
       app.useGlobalInterceptors(new TransformInterceptor());
+      app.useGlobalInterceptors(new UserContextInterceptor());
       app.use(cookieParser());
       app.use(helmet());
 
