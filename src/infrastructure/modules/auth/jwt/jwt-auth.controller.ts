@@ -1,11 +1,11 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { User } from 'infrastructure/data-access/entities';
 
-import { JwtAuthService } from './services/jwt-auth.service';
-import { Token } from '../../../../core/auth/jwt/interfaces';
 import { LoginInput } from '../input/login.input';
 import { RegisterInput } from '../input/register.input';
+import { JwtAuthService } from './services/jwt-auth.service';
+import { Token } from 'core/auth/jwt/interfaces';
+import { User } from 'infrastructure/data-access/entities';
 
 @ApiTags('Auth')
 @Controller('auth')

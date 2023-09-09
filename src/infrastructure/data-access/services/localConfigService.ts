@@ -4,7 +4,7 @@ import { config as ConfigFactory } from 'dotenv';
 import { getResolvedEnvironmentFilePath } from '../../environment/utils/utils';
 import { BaseService } from './baseService';
 
-export class localConfigService implements BaseService {
+export class LocalConfigService implements BaseService {
   private configService: ConfigService;
 
   constructor() {

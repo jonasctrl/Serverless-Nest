@@ -1,19 +1,41 @@
 import { ConflictException, Injectable } from '@nestjs/common';
-import { IUserProvider } from 'core/user/user.provider.abs';
-import { IUserWriter } from 'core/user/user.writer.abs';
 
 import { CreateUserInput } from './input/create-user.input';
 import { UserOutput } from './output/user.output';
+import { UserRequestContext } from 'core/auth/interfaces/user-request-context';
+import { UnitOfWorkService } from 'core/data-access/unit-of-work.service';
+import { IUserProvider } from 'core/user/user.provider.abs';
+import { IUserWriter } from 'core/user/user.writer.abs';
 
 @Injectable()
 export class UserService {
   constructor(
     private readonly userProvider: IUserProvider,
     private readonly userWriter: IUserWriter,
+    private readonly unitOfWork: UnitOfWorkService,
   ) {}
 
-  async getUser(id: number): Promise<UserOutput> {
+  async getUserContext({ id }: UserRequestContext): Promise<UserOutput> {
     const user = await this.userProvider.getUser({ id }, 'id', 'name', 'email');
+
+    const test = await this.userProvider.getUser({ id });
+    this.userWriter.updateUser({
+      ...test!,
+      name: 'Updated name',
+    });
+
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    return user;
+  }
+
+  async getUser(id: number): Promise<UserOutput> {
+    // NOTE: Transaction example
+    const user = await this.unitOfWork.transaction(async () => {
+      return this.userProvider.getUser({ id }, 'id', 'name', 'email');
+    });
 
     if (!user) {
       throw new ConflictException('User not found');

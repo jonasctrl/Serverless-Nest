@@ -127,7 +127,9 @@ module.exports = {
     all: false,
     modules: true,
     errors: true,
-    warnings: true,
+
+    // NOTE: WARNINGS MIGHT NOT SHOULD BE DISABLED
+    warnings: false,
     
     // our additional options
     moduleTrace: true,

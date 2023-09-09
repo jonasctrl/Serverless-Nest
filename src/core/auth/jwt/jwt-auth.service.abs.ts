@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { User } from 'infrastructure/data-access/entities';
 
 import { AuthOptions, Token } from './interfaces';
+import { User } from 'infrastructure/data-access/entities';
 
 @Injectable()
 export abstract class IJwtAuthService {

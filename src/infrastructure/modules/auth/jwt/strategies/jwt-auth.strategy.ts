@@ -2,16 +2,19 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
-import { IJwtAuthStrategy } from 'core/auth/jwt/strategies/jwt-auth.strategy.abs';
 import { DateTime } from 'luxon';
 import { Strategy } from 'passport-jwt';
 
-import { SESSION_KEY } from '../../constants/constants';
+import { SESSION_KEY } from '../../../../../core/auth/constants/constants';
+import { IJwtAuthStrategy } from 'core/auth/jwt/strategies/jwt-auth.strategy.abs';
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) implements IJwtAuthStrategy {
   constructor(configService: ConfigService) {
-    const extractJwtFromCookie = (req: any) => {
+    const extractJwtFromCookie = (req: {
+      headers: { authorization: string };
+      cookies: { [key: string]: string };
+    }) => {
       let token = null;
 
       // TODO: Token extraction unity.
@@ -33,7 +36,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) implements IJwtA
     });
   }
 
-  async validate(payload: any) {
+  async validate(payload: { email: string; exp: number }) {
     Logger.log(`Validating user [${payload.email}] request`, 'JwtAuthStrategy');
 
     this.validatePayload(payload);
@@ -41,9 +44,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) implements IJwtA
     return payload;
   }
 
-  private validatePayload(payload: any) {
-    const { exp } = payload;
-
+  private validatePayload({ exp }: { exp: number }) {
     const nowDate = DateTime.local();
     const expDate = DateTime.fromSeconds(exp);
 

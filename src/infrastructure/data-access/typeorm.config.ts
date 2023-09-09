@@ -1,9 +1,9 @@
 import path from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
-import { BaseService } from './services/baseService';
-import { localConfigService } from './services/localConfigService';
 import * as Entities from './entities';
+import { BaseService } from './services/baseService';
+import { LocalConfigService } from './services/localConfigService';
 
 export const typeOrmConfigProxy = <T extends BaseService>(configService: T): DataSourceOptions => ({
   type: 'mssql',
@@ -18,4 +18,4 @@ export const typeOrmConfigProxy = <T extends BaseService>(configService: T): Dat
   options: { encrypt: false },
 });
 
-export default new DataSource(typeOrmConfigProxy(new localConfigService()));
+export default new DataSource(typeOrmConfigProxy(new LocalConfigService()));

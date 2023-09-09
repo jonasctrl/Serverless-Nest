@@ -1,17 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ConflictException } from '@nestjs/common/exceptions';
 import { JwtService } from '@nestjs/jwt';
+
+import { JwtEncodingService } from './jwt-encoding.service';
+import { JwtValidationService } from './jwt-validation.service';
+import { UserRoles } from 'core/auth/constants';
+import { JwtPayload } from 'core/auth/interfaces';
+import { AuthOptions, Token } from 'core/auth/jwt/interfaces';
 import { IJwtAuthService } from 'core/auth/jwt/jwt-auth.service.abs';
 import { IUserProvider } from 'core/user/user.provider.abs';
 import { IUserWriter } from 'core/user/user.writer.abs';
 import { User } from 'infrastructure/data-access/entities';
-
-import { JwtPayload } from '../../../../../core/auth/interfaces/jwt-payload';
-import { Token } from '../../../../../core/auth/jwt/interfaces';
-import { AuthOptions } from '../../../../../core/auth/jwt/interfaces/auth-options.interface';
-import { UserRoles } from '../../constants/constants';
-import { JwtEncodingService } from './jwt-encoding.service';
-import { JwtValidationService } from './jwt-validation.service';
 
 @Injectable()
 export class JwtAuthService implements IJwtAuthService {
@@ -54,8 +53,7 @@ export class JwtAuthService implements IJwtAuthService {
     };
   }
 
-  public async register(requestUser: User): Promise<void> {
-    const { name, email, password } = requestUser;
+  public async register({ name, email, password }: User): Promise<void> {
     const user = await this.usersProvider.getUser({
       email: email,
     });

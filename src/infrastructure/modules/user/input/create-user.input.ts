@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsEmail, IsEnum, IsOptional } from 'class-validator';
-import { UserRoles } from 'infrastructure/modules/auth/constants/constants';
+
+import { UserRoles } from 'core/auth/constants';
 
 export class CreateUserInput {
   @ApiProperty()

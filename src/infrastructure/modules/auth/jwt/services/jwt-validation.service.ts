@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConflictException, UnauthorizedException } from '@nestjs/common/exceptions';
-import { IJwtValidationService } from 'core/auth/jwt/jwt-validation.service.abs';
 import crypto from 'crypto';
-import { User } from 'infrastructure/data-access/entities';
 
 import {
   HASHING_ALGORITHM,
@@ -10,6 +8,8 @@ import {
   HASHING_ITERATIONS,
   HASHING_KEY_LENGTH,
 } from './constants';
+import { IJwtValidationService } from 'core/auth/jwt/jwt-validation.service.abs';
+import { User } from 'infrastructure/data-access/entities';
 
 @Injectable()
 export class JwtValidationService implements IJwtValidationService {

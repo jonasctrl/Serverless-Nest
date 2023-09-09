@@ -1,11 +1,13 @@
 import { Module } from '@nestjs/common';
-import { IUserProvider } from 'core/user/user.provider.abs';
-import { IUserWriter } from 'core/user/user.writer.abs';
 
 import { UserProvider } from './user.provider';
 import { UserWriter } from './user.writer';
+import { DataAccessModule } from 'core/data-access/data-access.module';
+import { IUserProvider } from 'core/user/user.provider.abs';
+import { IUserWriter } from 'core/user/user.writer.abs';
 
 @Module({
+  imports: [DataAccessModule],
   providers: [
     {
       useClass: UserProvider,

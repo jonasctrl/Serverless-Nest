@@ -2,13 +2,17 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { Context, Handler } from 'aws-lambda';
+import { APIGatewayProxyEvent, Context, Handler } from 'aws-lambda';
 import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
+import cls from 'cls-hooked';
 import cookieParser from 'cookie-parser';
 import express from 'express';
 import helmet from 'helmet';
 import { Server } from 'http';
+
+import { clsMiddleware } from '../infrastructure/middleware/cls/correlationIdBinder';
+import { SessionNamespace } from 'core/auth/context/namespaces';
 import { TransformInterceptor } from 'infrastructure/middleware/interceptors/transform.interceptor';
 import { ApiModule } from 'infrastructure/modules/api.module';
 
@@ -37,6 +41,9 @@ async function bootstrapServer(): Promise<Server> {
       const app = await NestFactory.create(ApiModule, adapter);
 
       // NOTE: Middleware
+      const namespace = cls.createNamespace(SessionNamespace.User);
+      app.use(clsMiddleware(namespace));
+
       app.use(eventContext());
       app.useGlobalPipes(new ValidationPipe());
       app.useGlobalInterceptors(new TransformInterceptor());
@@ -63,7 +70,7 @@ async function bootstrapServer(): Promise<Server> {
   return Promise.resolve(cachedServer);
 }
 
-export const handler: Handler = async (event: any, context: Context) => {
+export const handler: Handler = async (event: APIGatewayProxyEvent, context: Context) => {
   cachedServer = await bootstrapServer();
 
   return proxy(cachedServer, event, context, 'PROMISE').promise;

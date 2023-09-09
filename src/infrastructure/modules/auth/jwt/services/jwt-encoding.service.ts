@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { IJwtEncodingService } from 'core/auth/jwt/jwt-encoding.service.abs';
 import crypto from 'crypto';
 
 import {
@@ -9,6 +8,7 @@ import {
   HASHING_KEY_LENGTH,
   RANDOM_BYTES_LENGTH,
 } from './constants';
+import { IJwtEncodingService } from 'core/auth/jwt/jwt-encoding.service.abs';
 
 @Injectable()
 export class JwtEncodingService implements IJwtEncodingService {

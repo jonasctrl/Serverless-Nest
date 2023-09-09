@@ -1,6 +1,6 @@
-import { Context } from './context';
+import { UserRequestContext } from './user-request-context';
 
-export interface JwtPayload extends Context {
+export interface JwtPayload extends UserRequestContext {
   exp?: number;
   iat?: number;
 }

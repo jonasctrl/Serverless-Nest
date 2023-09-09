@@ -6,7 +6,7 @@ export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+  constructor(private readonly reflector: Reflector) {}
 
   canActivate(context: ExecutionContext): boolean {
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
@@ -15,8 +15,7 @@ export class RolesGuard implements CanActivate {
       return false;
     }
 
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
+    const { user } = context.switchToHttp().getRequest();
     const isAuthorized = roles.includes(user.role);
 
     return isAuthorized;
