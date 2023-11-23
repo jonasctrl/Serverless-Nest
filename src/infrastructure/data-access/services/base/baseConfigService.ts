@@ -1,3 +1,3 @@
-export abstract class BaseService {
+export abstract class BaseConfigService {
   public abstract get(value: string): string | undefined;
 }

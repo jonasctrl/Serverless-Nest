@@ -5,11 +5,10 @@ import { PassportStrategy } from '@nestjs/passport';
 import { DateTime } from 'luxon';
 import { Strategy } from 'passport-jwt';
 
-import { SESSION_KEY } from '../../../../../core/auth/constants/constants';
-import { IJwtAuthStrategy } from 'core/auth/jwt/strategies/jwt-auth.strategy.abs';
+import { SESSION_KEY } from 'core/auth/constants';
 
 @Injectable()
-export class JwtAuthStrategy extends PassportStrategy(Strategy) implements IJwtAuthStrategy {
+export class JwtAuthStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(configService: ConfigService) {
     const extractJwtFromCookie = (req: {
       headers: { authorization: string };

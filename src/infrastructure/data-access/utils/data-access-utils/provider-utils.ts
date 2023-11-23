@@ -7,6 +7,13 @@ export const getRawOne = async <T extends ObjectLiteral>(
   return queryBuilder.select(columns as any).getRawOne();
 };
 
+export const getRawMany = async <T extends ObjectLiteral>(
+  queryBuilder: SelectQueryBuilder<T>,
+  columns: Array<keyof T>,
+): Promise<T[]> => {
+  return queryBuilder.select(columns as any).getRawMany();
+};
+
 export const filterByProperties = <T extends ObjectLiteral>(
   queryBuilder: SelectQueryBuilder<T>,
   filters: Partial<T>,

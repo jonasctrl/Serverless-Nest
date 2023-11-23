@@ -1,17 +1,4 @@
-export enum UserRoles {
-  Admin = 'ADMIN',
-  Viewer = 'VIEWER',
-}
-
-export enum PermissionActions {
-  Read = 'READ',
-  Write = 'WRITE',
-}
-
-export enum PermissionScopes {
-  all = '*',
-  user = 'USER',
-}
+import { PermissionActions, PermissionScopes, UserRoles } from './roles';
 
 export const permissionsMap: Map<UserRoles, { [key in PermissionActions]: PermissionScopes[] }> =
   new Map([

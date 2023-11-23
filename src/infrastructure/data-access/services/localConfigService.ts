@@ -2,9 +2,9 @@ import { ConfigService } from '@nestjs/config';
 import { config as ConfigFactory } from 'dotenv';
 
 import { getResolvedEnvironmentFilePath } from '../../environment/utils/utils';
-import { BaseService } from './baseService';
+import { BaseConfigService } from './base/baseConfigService';
 
-export class LocalConfigService implements BaseService {
+export class LocalConfigService implements BaseConfigService {
   private configService: ConfigService;
 
   constructor() {

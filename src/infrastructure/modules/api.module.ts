@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { AuthModule } from './auth/auth.module';
+import { HealthModule } from './health/health.module';
 import { UserModule } from './user/user.module';
 import { CoreModule } from 'core/core.module';
 import DatabaseModule from 'infrastructure/data-access/database.module';
@@ -17,6 +18,7 @@ import EnvironmentModule from 'infrastructure/environment/environment.module';
     DatabaseModule,
     UserModule,
     AuthModule,
+    HealthModule,
   ],
 })
 export class ApiModule {}

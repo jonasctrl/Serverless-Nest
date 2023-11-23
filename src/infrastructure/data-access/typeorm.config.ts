@@ -2,10 +2,12 @@ import path from 'path';
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 import * as Entities from './entities';
-import { BaseService } from './services/baseService';
+import { BaseConfigService } from './services/base/baseConfigService';
 import { LocalConfigService } from './services/localConfigService';
 
-export const typeOrmConfigProxy = <T extends BaseService>(configService: T): DataSourceOptions => ({
+export const typeOrmConfigProxy = <T extends BaseConfigService>(
+  configService: T,
+): DataSourceOptions => ({
   type: 'mssql',
   host: configService.get('DB_HOST_ADDRESS'),
   port: parseInt(configService.get('DB_HOST_PORT')!),

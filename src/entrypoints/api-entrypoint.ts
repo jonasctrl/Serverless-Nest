@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { APIGatewayProxyEvent, Context, Handler } from 'aws-lambda';
 import { createServer, proxy } from 'aws-serverless-express';
 import { eventContext } from 'aws-serverless-express/middleware';
+import { urlencoded } from 'body-parser';
 import cls from 'cls-hooked';
 import cookieParser from 'cookie-parser';
 import express from 'express';
@@ -49,6 +50,7 @@ async function bootstrapServer(): Promise<Server> {
       app.useGlobalPipes(new ValidationPipe());
       app.useGlobalInterceptors(new TransformInterceptor());
       app.useGlobalInterceptors(new UserContextInterceptor());
+      app.use(urlencoded({ extended: true }));
       app.use(cookieParser());
       app.use(helmet());
 
