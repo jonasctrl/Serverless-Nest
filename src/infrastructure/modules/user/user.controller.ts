@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Post, UseGuards, Version } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 
 import { JwtAuthGuard } from '../auth/jwt/guards/jwt-auth.guard';
 import { IDQuery } from '../utils';
@@ -15,6 +15,9 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('/me')
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
+  @ApiOkResponse({ type: UserOutput })
   @Roles(UserRoles.Admin, UserRoles.Viewer)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async getUserContext(): Promise<UserOutput> {
@@ -22,10 +25,13 @@ export class UserController {
   }
 
   @Get('/:id')
+  @Roles(UserRoles.Admin)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async getUser(@Param() { id }: IDQuery): Promise<UserOutput> {
     return this.userService.getUser(id);
   }
 
+  // TODO: Remove this endpoint later
   @Post('/')
   async createUser(@Body() request: CreateUserInput): Promise<UserOutput> {
     return this.userService.createUser(request);

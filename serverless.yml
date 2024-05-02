@@ -1,7 +1,6 @@
 org: 12ccs
 app: test-nest
 service: test-nest
-
 frameworkVersion: '3'
 
 plugins:
@@ -12,25 +11,8 @@ plugins:
 
 useDotenv: true
 
-provider:
-  name: aws
-  runtime: nodejs18.x
-
-package:
-  individually: true
-
-functions:
-  main:
-    handler: src/entrypoints/api-entrypoint.handler
-    timeout: 300
-    events:
-      - http:
-          method: any
-          path: /{proxy+}
-          cors: true
-
 custom:
-  stage: ${opt:stage, "prod"}
+  stage: ${opt:stage, 'prod'}
   webpack:
     webpackConfig: 'webpack.config.js'
     packager: 'yarn'
@@ -39,20 +21,33 @@ custom:
     path: environments/.env.${self:custom.stage}
     logging: false
   warmup:
-    officeHoursWarmer:
-      enabled: false
+    default:
+      enabled: ${self:custom.enableWarmup, false}
       events:
-        - schedule: cron(0/5 8-17 ? * MON-FRI *)
-      concurrency: 10
-      verbose: true
-      logRetentionInDays: 7
-    outOfOfficeHoursWarmer:
-      enabled: false
-      events:
-        - schedule: cron(0/5 0-7 ? * MON-FRI *)
-        - schedule: cron(0/5 18-23 ? * MON-FRI *)
-        - schedule: cron(0/5 * ? * SAT-SUN *)
+        - schedule: cron(0/10 * ? * MON-FRI *)
       concurrency: 1
-      verbose: false
-    testWarmer:
-      enabled: false
+      logRetentionInDays: 14
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  architecture: arm64
+  memorySize: 1024
+  timeout: 15
+  region: us-east-1
+  logRetentionInDays: 7
+
+package:
+  individually: true
+
+functions:
+  main:
+    handler: src/entrypoints/api-entrypoint.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: any
+          path: /{proxy+}
+          cors: true

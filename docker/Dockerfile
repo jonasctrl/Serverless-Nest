@@ -20,4 +20,4 @@ ENV MSSQL_PID Express
 EXPOSE 1433
 
 # Run Microsoft SQL Server and initialization script (at the same time)
-RUN /opt/mssql/bin/sqlservr & ./sql/entrypoint.sh
+CMD /bin/bash -c "./sql/entrypoint.sh & /opt/mssql/bin/sqlservr"

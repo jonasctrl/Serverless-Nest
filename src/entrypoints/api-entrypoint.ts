@@ -52,7 +52,15 @@ async function bootstrapServer(): Promise<Server> {
       app.useGlobalInterceptors(new UserContextInterceptor());
       app.use(urlencoded({ extended: true }));
       app.use(cookieParser());
-      app.use(helmet());
+      app.use(
+        helmet({
+          contentSecurityPolicy: {
+            directives: {
+              scriptSrc: ["'self'", 'https://cdn.jsdelivr.net/'],
+            },
+          },
+        }),
+      );
 
       // NOTE: Versioning
       app.enableVersioning({
@@ -60,9 +68,20 @@ async function bootstrapServer(): Promise<Server> {
       });
 
       // NOTE: Swagger API documentation
-      const config = new DocumentBuilder().build();
-      const document = SwaggerModule.createDocument(app, config);
-      SwaggerModule.setup('docs', app, document);
+      const stage = process.env.STAGE;
+      const swaggerPath = '/docs';
+      const swaggerCDN = 'https://cdn.jsdelivr.net/npm/swagger-ui-dist@5.7.2';
+
+      const swaggerConfig = new DocumentBuilder().addBearerAuth().addServer(`/${stage}`).build();
+      const document = SwaggerModule.createDocument(app, swaggerConfig);
+
+      SwaggerModule.setup(swaggerPath, app, document, {
+        customCssUrl: [`${swaggerCDN}/swagger-ui.css`],
+        customJs: [
+          `${swaggerCDN}/swagger-ui-bundle.js`,
+          `${swaggerCDN}/swagger-ui-standalone-preset.js`,
+        ],
+      });
 
       cachedServer = createServer(expressApp, undefined, binaryMimeTypes);
       await app.init();
