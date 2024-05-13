@@ -33,7 +33,7 @@ provider:
   runtime: nodejs18.x
   architecture: arm64
   memorySize: 1024
-  timeout: 15
+  timeout: 30
   region: us-east-1
   logRetentionInDays: 7
 
@@ -47,7 +47,15 @@ functions:
       - http:
           method: ANY
           path: /
+          cors: true
       - http:
           method: any
           path: /{proxy+}
           cors: true
+
+resources:
+  Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: custom-storage-${self:custom.stage}
