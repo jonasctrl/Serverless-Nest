@@ -10,7 +10,7 @@ authorLink: 'https://github.com/neilime'
 authorName: 'Emilien Escalle'
 authorAvatar: 'https://avatars3.githubusercontent.com/u/314088?s=140&v=4'
 -->
-# Nest application example
+# Nest.js & lambda template
 
 This example demonstrates how to setup a [Nest](https://github.com/nestjs/nest) application.
 
